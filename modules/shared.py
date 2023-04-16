@@ -1,69 +1,69 @@
-import argparse
-from pathlib import Path
+import argparse #argparser
+from pathlib import Path #work with paths
 
-import yaml
+import yaml #import yaml to work with yaml files
 
-model = None
-tokenizer = None
-model_name = "None"
-lora_names = []
-soft_prompt_tensor = None
-soft_prompt = False
-is_RWKV = False
-is_llamacpp = False
+model = None # model
+tokenizer = None # tokernize
+model_name = "None" #model name
+lora_names = [] #lora_names
+soft_prompt_tensor = None #soft_promp_tensor
+soft_prompt = False #soft_prompt
+is_RWKV = False #isRWKV
+is_llamacpp = False #is lammaccp
 
-# Chat variables
-history = {'internal': [], 'visible': []}
-character = 'None'
-stop_everything = False
-processing_message = '*Is typing...*'
+# Chat variables #it seems that we are using chat varibles
+history = {'internal': [], 'visible': []} #history 
+character = 'None' # character
+stop_everything = False #stop everything 
+processing_message = '*Is typing...*' # processing mesage
 
 # UI elements (buttons, sliders, HTML, etc)
-gradio = {}
+gradio = {} #ui elemts ## https://gradio.app/
 
 # Generation input parameters
-input_params = []
+input_params = [] # generate input params
 
 # For restarting the interface
-need_restart = False
+need_restart = False #if need restart flag
 
-settings = {
-    'max_new_tokens': 200,
-    'max_new_tokens_min': 1,
-    'max_new_tokens_max': 2000,
-    'seed': -1,
-    'name1': 'You',
-    'name2': 'Assistant',
-    'context': 'This is a conversation with your Assistant. The Assistant is very helpful and is eager to chat with you and answer your questions.',
-    'greeting': '',
-    'end_of_turn': '',
-    'custom_stopping_strings': '',
-    'stop_at_newline': False,
-    'add_bos_token': True,
-    'ban_eos_token': False,
-    'skip_special_tokens': True,
-    'truncation_length': 2048,
-    'truncation_length_min': 0,
-    'truncation_length_max': 4096,
-    'mode': 'cai-chat',
-    'instruction_template': 'None',
-    'chat_prompt_size': 2048,
-    'chat_prompt_size_min': 0,
-    'chat_prompt_size_max': 2048,
-    'chat_generation_attempts': 1,
-    'chat_generation_attempts_min': 1,
-    'chat_generation_attempts_max': 5,
-    'default_extensions': [],
-    'chat_default_extensions': ["gallery"],
-    'presets': {
-        'default': 'Default',
-        '.*(alpaca|llama)': "LLaMA-Precise",
-        '.*pygmalion': 'NovelAI-Storywriter',
-        '.*RWKV': 'Naive',
+settings = { #settings
+    'max_new_tokens': 200, #max new tokens
+    'max_new_tokens_min': 1, # max new tokens min
+    'max_new_tokens_max': 2000, # max new tokens max
+    'seed': -1, # seed
+    'name1': 'You', # name 1
+    'name2': 'Assistant', # name 2
+    'context': 'This is a conversation with your Assistant. The Assistant is very helpful and is eager to chat with you and answer your questions.', # context
+    'greeting': '', # greeting
+    'end_of_turn': '', # end of turn
+    'custom_stopping_strings': '', # custom stopping strings
+    'stop_at_newline': False, # stop at newline
+    'add_bos_token': True, # add begin of sentence token
+    'ban_eos_token': False, # ban end of sentence token
+    'skip_special_tokens': True, # skip special tokens true
+    'truncation_length': 2048, 3 #truncated anght
+    'truncation_length_min': 0, # truncation length min
+    'truncation_length_max': 4096, # max truncation lenght
+    'mode': 'cai-chat', # mode cai-chat
+    'instruction_template': 'None', #instruction template
+    'chat_prompt_size': 2048, #chat prompts size
+    'chat_prompt_size_min': 0, # chat prompt size min
+    'chat_prompt_size_max': 2048, # chat promptsize max
+    'chat_generation_attempts': 1, #generation attempts
+    'chat_generation_attempts_min': 1, # min attempt
+    'chat_generation_attempts_max': 5, # maxatt
+    'default_extensions': [], #default extension
+    'chat_default_extensions': ["gallery"], # chat defautl extens
+    'presets': { #presents
+        'default': 'Default', # default
+        '.*(alpaca|llama)': "LLaMA-Precise", # it seems to be lama model https://huggingface.co/docs/transformers/main/en/model_doc/llama
+        '.*pygmalion': 'NovelAI-Storywriter', # idk some website to tell ai generated stories with characters
+        '.*RWKV': 'Naive', #idk
     },
-    'prompts': {
+    'prompts': { #prompts
         'default': 'QA',
-        '.*(gpt4chan|gpt-4chan|4chan)': 'GPT-4chan',
+        '.*(gpt4chan|gpt-4chan|4chan)': 'GPT-4chan', #gpt 4 chat lol
         '.*oasst': 'Open Assistant',
         '.*alpaca': "Alpaca",
     },
@@ -74,7 +74,7 @@ settings = {
 }
 
 
-def str2bool(v):
+def str2bool(v): # str to bool 
     if isinstance(v, bool):
         return v
     if v.lower() in ('yes', 'true', 't', 'y', '1'):

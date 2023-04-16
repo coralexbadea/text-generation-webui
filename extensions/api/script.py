@@ -1,8 +1,8 @@
-import json
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from threading import Thread
+import json #json for working with json
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer #basic http request and threading 
+from threading import Thread #threading python cuz thats a great idea
 
-from modules import shared
+from modules import shared # from modules import shared
 from modules.text_generation import encode, generate_reply
 
 params = {

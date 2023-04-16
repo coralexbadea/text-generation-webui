@@ -10,7 +10,7 @@ import modules.shared as shared
 
 
 # Copied from https://github.com/PygmalionAI/gradio-ui/
-class _SentinelTokenStoppingCriteria(transformers.StoppingCriteria):
+class _SentinelTokenStoppingCriteria(transformers.StoppingCriteria): # 
 
     def __init__(self, sentinel_token_ids: list, starting_idx: int):
         transformers.StoppingCriteria.__init__(self)
